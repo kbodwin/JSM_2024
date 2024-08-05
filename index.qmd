@@ -1,0 +1,271 @@
+---
+title: "Fight or flight"
+subtitle: "Deciding which pain points to avoid and which to address in intro coding."
+format: 
+  revealjs:
+    incremental: true  
+    theme: solarized
+execute:
+  echo: true
+---
+
+## Top pain points
+
+1.  Installations, versions, and updates.
+
+2.  Packages, `library()` statements, and conflicts.
+
+3.  Files, folders, and paths
+
+4.  Object types/structures and function expectations.
+
+5.  Preparing data for analysis.
+
+6.  Collaboration and version control.
+
+## .{background-image="https://i.redd.it/3t9lm7b6q5hx.jpg"}
+
+## Fight or Flight?
+
+-   **Fight:** Include the topic as a **graded learning objective**.
+
+-   **Flight:** Provide enough **invisible prior setup** so that students **never encounter** the situation.
+
+-   **Unhappy middle ground:** Problem does not appear in **teaching example** but could be encountered in **later assignments**.
+
+## Fight: Package installations
+
+Sub-unit that includes...
+
+-   What are **libraries** exactly?
+
+-   `install` once; `library/require` in every document
+
+-   How and when to check **versions**
+
+-   What are **conflicts** and how should we handle them? (`::` and `conflicted`)
+
+-   Activities troubleshooting installs
+
+## Example activities: Package installations
+
+*What is going wrong and how would you fix it?*
+
+```{r}
+#| error: true
+mtcars %>% summary()
+```
+
+. . .
+
+*What is going wrong and how would you fix it?*
+
+```{r}
+#| error: true
+#| message: false
+library(tidyverse)
+library(MASS)
+mtcars %>% select(mpg)
+```
+
+## Flight: Package installations
+
+Day one setup that avoids packages...
+
+-   **Posit Cloud** or **Colab**
+
+-   Script using `pak` and `conflicted` for students to **run once** in first class.
+
+-   Warning to students that **if** they branch out, they will need to seek your help.
+
+## Unhappy middle ground: Package installations
+
+-   Encounter installation errors "organically"
+
+-   Provide a script with lots of `install.packages()` statements with no explanation
+
+-   Encourage students to find new functions, without teaching packages directly.
+
+-   Allow `install.packages()` in code chunks
+
+## . {background-image="https://i.kym-cdn.com/entries/icons/facebook/000/022/978/y_tho_meme.jpg"}
+
+## Questions
+
+1.  What doors does this unlock?
+
+2.  What good habits does this encourage?
+
+3.  What is the opportunity cost?
+
+## Fight: File management
+
+-   Show students **folder structure** on computers
+
+-   Teach what a **path** is and how to use **relative paths**
+
+-   Force use of a project folder and `data` folder (*graded!*)
+
+-   Use **R Projects** and the `here` package. (*graded!*)
+
+## Fight: File management
+
+**NO!!!**
+
+```{r}
+#| eval: false
+
+setwd("/Users/kellybodwin/Dropbox/Stat101")
+dat <- read.csv("data/mydata.csv")
+```
+
+. . .
+
+**ALSO NO! (but less bad)**
+
+```{r}
+#| eval: false
+
+path = "/Users/kellybodwin/Dropbox/Stat101/"
+dat <- read.csv(paste0(path, "data/mydata.csv"))
+```
+
+. . .
+
+**YES**
+
+```{r}
+#| eval: false
+
+dat <- read.csv(here::here("data", "mydata.csv"))
+```
+
+## Flight: File management
+
+-   Read all data from URL or built-in data packages.
+
+## Why though?
+
+1.  *What doors does it open?*
+    -   Students can use their own data sources
+    -   Saving intermediate data objects
+2.  *What good habits does it encourage?*
+    -   Sensible folder structure
+    -   Reproducible, shareable projects
+3.  *What is the cost?*
+    -   Class time (of course)
+    -   "Mysterious" errors when done wrong
+
+## Actual coding skills
+
+-   Not all classes have *programming* as a **learning objective**.
+
+-   Ask yourself: Will this student *definitely* use this *exact code skill* again? Or is the goal more **conceptual**?
+
+-   If the code is the **tool** not the **objective**, then choose **"Flight"** as much as possible.
+
+## Fight or flight: Coding concepts
+
+What is the **most important** learning goal in the following?
+
+```{r}
+mtcars %>%
+  rownames_to_column(var = "car") %>%
+  mutate(
+    car_brand = str_extract(car, "\\w+")
+  ) %>%
+  count(car_brand) %>%
+  arrange(desc(n))
+```
+
+## Fight or flight: Coding concepts
+
+What is the **most important** learning goal?
+
+-   Using a **pipeline** to `mutate` then `count` then `arrange`?
+
+```{r}
+#| eval: false
+mtcars %>%
+  _____(var = "car") %>%
+  _____(
+    car_brand = str_extract(car, "\\w+")
+  ) %>%
+  _____(car_brand) %>%
+  _____(desc(n))
+```
+
+## Fight or flight: Coding concepts
+
+What is the **most important** learning goal?
+
+-   Recognizing that `mutate` takes a *dataset* while `str_extract` takes a *variable/vector*?
+
+```{r}
+#| error: true
+mtcars %>%
+  rownames_to_column(var = "car") %>%
+  str_extract(car, "\\w+") %>%
+  count() %>%
+  arrange(desc(n))
+```
+
+## Fight or flight: Coding concepts
+
+What is the **most important** learning goal?
+
+-   Using *regular expressions* in `str_extract`?
+
+```{r}
+mtcars %>%
+  rownames_to_column(var = "car") %>%
+  mutate(
+    car_brand = str_extract(car, "_____")
+  ) %>%
+  count(car_brand) %>%
+  arrange(desc(n))
+```
+
+## Fight or flight: Coding concepts
+
+What is the **most important** learning goal?
+
+-   Thinking through the **data processing steps** necessary to get to the final counts?
+
+```{r}
+#| eval: false
+mtcars %>%
+  rownames_to_column(var = "car") %>%
+  mutate(
+    car_brand = str_extract(car, "\\w+")
+  ) %>%
+  count(car_brand) %>%
+  arrange(desc(n))
+```
+
+## Fight or flight: Coding concepts
+
+What is the **most important** learning goal?
+
+-   Interpreting the **results**?
+
+```{r}
+#| echo: false
+mtcars %>%
+  rownames_to_column(var = "car") %>%
+  mutate(
+    car_brand = str_extract(car, "\\w+")
+  ) %>%
+  count(car_brand) %>%
+  arrange(desc(n))
+```
+
+## Takeaway messages
+
+-   Be deliberate about what you **do teach** ("Fight") - don't just mention things in passing
+
+-   Be deliberate about what you **don't teach** ("Flight") - simply providing working code is not enough.
+
+-   **You can't teach everything**. Identify your **learning objectives**; avoid *all* skills outside of those.
+
+-   *(GitHub in a first class is a bad idea - change my mind!)*
